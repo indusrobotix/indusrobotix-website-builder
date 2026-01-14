@@ -19,8 +19,8 @@ export const siteConfig = {
   // Contact Information
   contact: {
     email: "info@indusrobotix.pk",
-    phone: "+92 300 1234567",
-    whatsapp: "+92 300 1234567",
+    phone: "+92 312 1179306",
+    whatsapp: "+92 312 1179306",
     address: "Tech Innovation Hub, Lahore, Pakistan",
     city: "Lahore",
     country: "Pakistan",
@@ -37,15 +37,15 @@ export const siteConfig = {
 
   // Business Hours
   businessHours: {
-    weekdays: "9:00 AM - 6:00 PM",
-    saturday: "10:00 AM - 4:00 PM",
-    sunday: "Closed",
+    weekdays: "2:00 PM - 11:00 PM",
+    saturday: "11:00 AM - 11:00 PM",
+    sunday: "7:00 AM - 11:00 PM",
   },
 
   // Statistics (shown on homepage)
   stats: [
-    { value: "500+", label: "Kits Delivered" },
-    { value: "50+", label: "Custom Designs" },
+    { value: "10+", label: "Kits Delivered" },
+    { value: "5+", label: "Custom Designs" },
     { value: "100%", label: "Local Sourcing" },
     { value: "24/7", label: "Support" },
   ],
