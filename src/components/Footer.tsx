@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import { Cog, Mail, Phone, MapPin, Facebook, Linkedin, Youtube, Instagram } from "lucide-react";
+import { siteConfig, services } from "@/data";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+
+  const socialLinks = [
+    { icon: Facebook, url: siteConfig.social.facebook, label: "Facebook" },
+    { icon: Instagram, url: siteConfig.social.instagram, label: "Instagram" },
+    { icon: Linkedin, url: siteConfig.social.linkedin, label: "LinkedIn" },
+    { icon: Youtube, url: siteConfig.social.youtube, label: "YouTube" },
+  ];
 
   return (
     <footer className="bg-card border-t border-border">
@@ -22,34 +30,22 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Pakistan's premier robotics solutions provider. Custom robotic kits 
+              {siteConfig.contact.country}'s premier robotics solutions provider. Custom robotic kits 
               with precision-designed acrylic chassis for education and innovation.
             </p>
             <div className="flex gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -80,16 +76,14 @@ const Footer = () => {
               Our Services
             </h4>
             <ul className="space-y-3">
-              {[
-                "Custom Robotic Kits",
-                "Acrylic Chassis Design",
-                "Component Assembly",
-                "Technical Consultation",
-                "STEM Workshops",
-                "Prototype Development",
-              ].map((service) => (
-                <li key={service}>
-                  <span className="text-muted-foreground text-sm">{service}</span>
+              {services.slice(0, 6).map((service) => (
+                <li key={service.id}>
+                  <Link
+                    to="/services"
+                    className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                  >
+                    {service.title}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -104,25 +98,25 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  Lahore, Punjab, Pakistan
+                  {siteConfig.contact.address}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
                 <a
-                  href="tel:+923001234567"
+                  href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
                   className="text-muted-foreground text-sm hover:text-primary transition-colors"
                 >
-                  +92 300 123 4567
+                  {siteConfig.contact.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
                 <a
-                  href="mailto:info@indusrobotix.pk"
+                  href={`mailto:${siteConfig.contact.email}`}
                   className="text-muted-foreground text-sm hover:text-primary transition-colors"
                 >
-                  info@indusrobotix.pk
+                  {siteConfig.contact.email}
                 </a>
               </li>
             </ul>
@@ -133,7 +127,7 @@ const Footer = () => {
         <div className="divider-glow mt-12 mb-8" />
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © {currentYear} IndusRoboTix. All rights reserved.
+            © {currentYear} {siteConfig.businessName}. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-muted-foreground text-sm hover:text-primary transition-colors">

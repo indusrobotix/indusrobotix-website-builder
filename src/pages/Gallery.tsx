@@ -2,62 +2,16 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import GearDecoration from "@/components/GearDecoration";
-import productKit from "@/assets/product-kit.jpg";
-import chassisDesign from "@/assets/chassis-design.jpg";
-import robotCar from "@/assets/robot-car.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
+import { galleryImages, galleryCategories, type GalleryImage } from "@/data";
+import { siteConfig } from "@/data";
 
 const Gallery = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [activeCategory, setActiveCategory] = useState("all");
 
-  const galleryItems = [
-    {
-      id: 1,
-      image: gallery1,
-      title: "Robotic Gripper Arm",
-      category: "Projects",
-    },
-    {
-      id: 2,
-      image: productKit,
-      title: "Complete Starter Kit",
-      category: "Products",
-    },
-    {
-      id: 3,
-      image: gallery2,
-      title: "STEM Workshop",
-      category: "Workshops",
-    },
-    {
-      id: 4,
-      image: chassisDesign,
-      title: "Custom Acrylic Chassis",
-      category: "Products",
-    },
-    {
-      id: 5,
-      image: gallery3,
-      title: "Hexapod Walking Robot",
-      category: "Projects",
-    },
-    {
-      id: 6,
-      image: robotCar,
-      title: "Smart Line Follower",
-      category: "Products",
-    },
-  ];
-
-  const categories = ["All", "Products", "Projects", "Workshops"];
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredItems =
-    activeCategory === "All"
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === activeCategory);
+  const filteredItems = activeCategory === "all"
+    ? galleryImages
+    : galleryImages.filter((item) => item.category === activeCategory);
 
   return (
     <div className="relative">
@@ -73,17 +27,17 @@ const Gallery = () => {
 
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
+            {galleryCategories.map((category) => (
               <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
                 className={`px-6 py-2 rounded-full font-medium text-sm transition-all ${
-                  activeCategory === category
+                  activeCategory === category.id
                     ? "bg-primary text-primary-foreground shadow-glow"
                     : "bg-secondary text-muted-foreground hover:text-primary"
                 }`}
               >
-                {category}
+                {category.name}
               </button>
             ))}
           </div>
@@ -97,19 +51,19 @@ const Gallery = () => {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                onClick={() => setSelectedImage(item.image)}
+                onClick={() => setSelectedImage(item)}
                 className="card-industrial overflow-hidden cursor-pointer group"
               >
                 <div className="relative aspect-square overflow-hidden">
                   <img
-                    src={item.image}
-                    alt={item.title}
+                    src={item.src}
+                    alt={item.alt}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform">
-                    <span className="text-primary text-sm font-medium">
-                      {item.category}
+                    <span className="text-primary text-sm font-medium capitalize">
+                      {item.category.replace("-", " ")}
                     </span>
                     <h3 className="font-orbitron text-lg font-semibold text-foreground">
                       {item.title}
@@ -119,6 +73,12 @@ const Gallery = () => {
               </div>
             ))}
           </div>
+
+          {filteredItems.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground">No images found in this category.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -134,12 +94,21 @@ const Gallery = () => {
           >
             <X className="w-8 h-8" />
           </button>
-          <img
-            src={selectedImage}
-            alt="Gallery preview"
-            className="max-w-full max-h-[85vh] object-contain rounded-lg"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              className="w-full max-h-[70vh] object-contain rounded-lg"
+            />
+            <div className="mt-4 text-center">
+              <h3 className="font-orbitron text-xl font-semibold text-foreground">
+                {selectedImage.title}
+              </h3>
+              {selectedImage.description && (
+                <p className="text-muted-foreground mt-2">{selectedImage.description}</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -148,30 +117,16 @@ const Gallery = () => {
         <GearDecoration position="left" className="bottom-0" />
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="font-orbitron text-4xl md:text-5xl font-bold text-primary mb-2">
-                500+
-              </p>
-              <p className="text-muted-foreground">Kits Delivered</p>
-            </div>
-            <div>
-              <p className="font-orbitron text-4xl md:text-5xl font-bold text-accent mb-2">
-                50+
-              </p>
-              <p className="text-muted-foreground">School Partners</p>
-            </div>
-            <div>
-              <p className="font-orbitron text-4xl md:text-5xl font-bold text-primary mb-2">
-                100+
-              </p>
-              <p className="text-muted-foreground">Custom Projects</p>
-            </div>
-            <div>
-              <p className="font-orbitron text-4xl md:text-5xl font-bold text-accent mb-2">
-                1000+
-              </p>
-              <p className="text-muted-foreground">Happy Students</p>
-            </div>
+            {siteConfig.stats.map((stat, index) => (
+              <div key={index}>
+                <p className={`font-orbitron text-4xl md:text-5xl font-bold mb-2 ${
+                  index % 2 === 0 ? "text-primary" : "text-accent"
+                }`}>
+                  {stat.value}
+                </p>
+                <p className="text-muted-foreground">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

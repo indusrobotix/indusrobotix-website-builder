@@ -4,9 +4,7 @@ import { ArrowRight, Cog, Package, Wrench, Users, Star, ChevronRight } from "luc
 import SectionHeading from "@/components/SectionHeading";
 import GearDecoration from "@/components/GearDecoration";
 import heroImage from "@/assets/hero-robotics.jpg";
-import productKit from "@/assets/product-kit.jpg";
-import chassisDesign from "@/assets/chassis-design.jpg";
-import robotCar from "@/assets/robot-car.jpg";
+import { siteConfig, products, testimonials, formatPrice } from "@/data";
 
 const Index = () => {
   const features = [
@@ -36,47 +34,8 @@ const Index = () => {
     },
   ];
 
-  const products = [
-    {
-      name: "Starter Robot Kit",
-      price: "PKR 8,500",
-      image: productKit,
-      description: "Perfect for beginners with Arduino, motors, and sensors included.",
-    },
-    {
-      name: "Custom Chassis Pack",
-      price: "PKR 3,500",
-      image: chassisDesign,
-      description: "Precision laser-cut acrylic chassis for any robot design.",
-    },
-    {
-      name: "Smart Line Follower",
-      price: "PKR 12,000",
-      image: robotCar,
-      description: "Advanced autonomous robot with obstacle detection.",
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: "Ahmed Khan",
-      role: "Engineering Student",
-      text: "IndusRoboTix helped me build my first robot for my university project. The quality is amazing!",
-      rating: 5,
-    },
-    {
-      name: "Dr. Sarah Malik",
-      role: "STEM Educator",
-      text: "We use their kits for our school robotics lab. The students love them and they're very durable.",
-      rating: 5,
-    },
-    {
-      name: "Hassan Ali",
-      role: "Hobbyist Maker",
-      text: "The custom chassis design service is unmatched. They brought my robot design to life perfectly.",
-      rating: 5,
-    },
-  ];
+  // Get first 3 products for preview
+  const featuredProducts = products.slice(0, 3);
 
   return (
     <div className="relative overflow-hidden">
@@ -101,19 +60,18 @@ const Index = () => {
             <div className="flex items-center gap-2 mb-6 animate-fade-in-up">
               <Cog className="w-5 h-5 text-primary animate-gear-slow" />
               <span className="text-primary font-medium text-sm uppercase tracking-widest">
-                Pakistan's Premier Robotics Provider
+                {siteConfig.contact.country}'s Premier Robotics Provider
               </span>
             </div>
 
             <h1 className="font-orbitron text-4xl md:text-5xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
               Building The
               <span className="block gradient-text">Future of Robotics</span>
-              In Pakistan
+              In {siteConfig.contact.country}
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl animate-fade-in-up">
-              Custom robotic kits with precision-designed acrylic chassis. 
-              From education to innovation, we power Pakistan's robotic dreams.
+              {siteConfig.tagline}. From education to innovation, we power {siteConfig.contact.country}'s robotic dreams.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up">
@@ -136,18 +94,16 @@ const Index = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-8 mt-16 pt-8 border-t border-border animate-fade-in-up">
-              <div>
-                <p className="font-orbitron text-3xl md:text-4xl font-bold text-primary">500+</p>
-                <p className="text-muted-foreground text-sm">Kits Sold</p>
-              </div>
-              <div>
-                <p className="font-orbitron text-3xl md:text-4xl font-bold text-accent">50+</p>
-                <p className="text-muted-foreground text-sm">Schools Served</p>
-              </div>
-              <div>
-                <p className="font-orbitron text-3xl md:text-4xl font-bold text-primary">100%</p>
-                <p className="text-muted-foreground text-sm">Local Sourcing</p>
-              </div>
+              {siteConfig.stats.slice(0, 3).map((stat, index) => (
+                <div key={index}>
+                  <p className={`font-orbitron text-3xl md:text-4xl font-bold ${
+                    index % 2 === 0 ? "text-primary" : "text-accent"
+                  }`}>
+                    {stat.value}
+                  </p>
+                  <p className="text-muted-foreground text-sm">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -194,9 +150,9 @@ const Index = () => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product, index) => (
+            {featuredProducts.map((product) => (
               <div
-                key={index}
+                key={product.id}
                 className="card-industrial overflow-hidden group"
               >
                 <div className="relative h-64 overflow-hidden">
@@ -216,7 +172,7 @@ const Index = () => {
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="font-orbitron text-xl text-accent font-bold">
-                      {product.price}
+                      {formatPrice(product.price)}
                     </span>
                     <Link
                       to="/products"
@@ -249,13 +205,13 @@ const Index = () => {
           <SectionHeading
             subtitle="Testimonials"
             title="What Our Customers Say"
-            description="Trusted by students, educators, and makers across Pakistan."
+            description={`Trusted by students, educators, and makers across ${siteConfig.contact.country}.`}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {testimonials.slice(0, 3).map((testimonial) => (
               <div
-                key={index}
+                key={testimonial.id}
                 className="card-industrial p-8"
               >
                 <div className="flex gap-1 mb-4">
@@ -267,7 +223,7 @@ const Index = () => {
                   ))}
                 </div>
                 <p className="text-foreground mb-6 italic leading-relaxed">
-                  "{testimonial.text}"
+                  "{testimonial.quote}"
                 </p>
                 <div>
                   <p className="font-semibold text-foreground">
@@ -275,6 +231,7 @@ const Index = () => {
                   </p>
                   <p className="text-muted-foreground text-sm">
                     {testimonial.role}
+                    {testimonial.organization && `, ${testimonial.organization}`}
                   </p>
                 </div>
               </div>
