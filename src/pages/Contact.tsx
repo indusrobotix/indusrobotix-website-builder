@@ -14,9 +14,11 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Youtube,
 } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import GearDecoration from "@/components/GearDecoration";
+import { siteConfig, faqs } from "@/data";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -64,55 +66,34 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Location",
-      content: "Lahore, Punjab, Pakistan",
+      content: siteConfig.contact.address,
       subtext: "Available for local meetups",
     },
     {
       icon: Phone,
       title: "Phone",
-      content: "+92 300 123 4567",
-      subtext: "Mon-Sat, 9AM-6PM",
+      content: siteConfig.contact.phone,
+      subtext: `${siteConfig.businessHours.weekdays}`,
     },
     {
       icon: Mail,
       title: "Email",
-      content: "info@indusrobotix.pk",
+      content: siteConfig.contact.email,
       subtext: "We reply within 24 hours",
     },
     {
       icon: Clock,
       title: "Business Hours",
-      content: "Mon - Sat: 9AM - 6PM",
-      subtext: "Sunday: Closed",
+      content: `Mon - Sat: ${siteConfig.businessHours.weekdays}`,
+      subtext: `Sunday: ${siteConfig.businessHours.sunday}`,
     },
   ];
 
-  const faqs = [
-    {
-      question: "Do you ship across Pakistan?",
-      answer:
-        "Yes! We deliver to all major cities in Pakistan through reliable courier services. Delivery typically takes 3-5 business days.",
-    },
-    {
-      question: "Can I get a custom robot designed?",
-      answer:
-        "Absolutely! We specialize in custom robotic solutions. Contact us with your requirements and we'll provide a detailed quote.",
-    },
-    {
-      question: "Do you offer bulk discounts for schools?",
-      answer:
-        "Yes, we offer special pricing for educational institutions and bulk orders. Get in touch to discuss your needs.",
-    },
-    {
-      question: "What payment methods do you accept?",
-      answer:
-        "We accept bank transfers, EasyPaisa, JazzCash, and cash on delivery for local orders.",
-    },
-    {
-      question: "Do you provide after-sales support?",
-      answer:
-        "Yes! All our products come with technical support. We're here to help you troubleshoot any issues.",
-    },
+  const socialLinks = [
+    { icon: Facebook, url: siteConfig.social.facebook, label: "Facebook" },
+    { icon: Instagram, url: siteConfig.social.instagram, label: "Instagram" },
+    { icon: Linkedin, url: siteConfig.social.linkedin, label: "LinkedIn" },
+    { icon: Youtube, url: siteConfig.social.youtube, label: "YouTube" },
   ];
 
   return (
@@ -186,7 +167,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="mt-1 bg-secondary border-border focus:border-primary"
-                      placeholder="+92 300 1234567"
+                      placeholder={siteConfig.contact.phone}
                     />
                   </div>
                   <div>
@@ -264,24 +245,18 @@ const Contact = () => {
                   Follow Us
                 </h4>
                 <div className="flex gap-4">
-                  <a
-                    href="#"
-                    className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-                  >
-                    <Facebook className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-                  >
-                    <Instagram className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </a>
+                  {socialLinks.map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                      aria-label={social.label}
+                    >
+                      <social.icon className="w-5 h-5" />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
@@ -300,8 +275,8 @@ const Contact = () => {
           />
 
           <div className="max-w-3xl mx-auto space-y-4">
-            {faqs.map((faq, index) => (
-              <div key={index} className="card-industrial p-6">
+            {faqs.map((faq) => (
+              <div key={faq.id} className="card-industrial p-6">
                 <h4 className="font-semibold text-foreground mb-2">
                   {faq.question}
                 </h4>

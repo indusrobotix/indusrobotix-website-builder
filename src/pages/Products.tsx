@@ -1,94 +1,18 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Star, Filter, ChevronRight } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import GearDecoration from "@/components/GearDecoration";
-import productKit from "@/assets/product-kit.jpg";
-import chassisDesign from "@/assets/chassis-design.jpg";
-import robotCar from "@/assets/robot-car.jpg";
+import { products, productCategories, formatPrice, type Product } from "@/data";
 
 const Products = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Starter Robot Kit",
-      price: "PKR 8,500",
-      originalPrice: "PKR 10,000",
-      image: productKit,
-      category: "Kits",
-      badge: "Best Seller",
-      rating: 4.8,
-      reviews: 45,
-      description:
-        "Complete beginner-friendly kit with Arduino Uno, motors, sensors, and custom acrylic chassis.",
-      features: ["Arduino Uno R3", "4x DC Motors", "L298N Motor Driver", "Custom Acrylic Chassis", "IR Sensors", "Complete Wiring Kit"],
-    },
-    {
-      id: 2,
-      name: "Custom Chassis Pack",
-      price: "PKR 3,500",
-      image: chassisDesign,
-      category: "Components",
-      rating: 4.9,
-      reviews: 32,
-      description:
-        "Precision laser-cut acrylic chassis pieces for building custom robots.",
-      features: ["3mm Acrylic Material", "Precision Laser-Cut", "Multiple Mounting Holes", "Hardware Included", "Custom Sizes Available"],
-    },
-    {
-      id: 3,
-      name: "Smart Line Follower",
-      price: "PKR 12,000",
-      image: robotCar,
-      category: "Kits",
-      badge: "New",
-      rating: 4.7,
-      reviews: 28,
-      description:
-        "Advanced autonomous robot with line following and obstacle avoidance.",
-      features: ["ESP32 Brain", "5x IR Sensors", "Ultrasonic Sensor", "OLED Display", "Rechargeable Battery", "Bluetooth Control"],
-    },
-    {
-      id: 4,
-      name: "Arduino Mega Kit",
-      price: "PKR 15,000",
-      image: productKit,
-      category: "Kits",
-      rating: 4.6,
-      reviews: 19,
-      description:
-        "Professional-grade kit with Arduino Mega for complex robotics projects.",
-      features: ["Arduino Mega 2560", "Servo Motors", "Stepper Motors", "LCD Display", "Multiple Sensors", "Extended GPIO"],
-    },
-    {
-      id: 5,
-      name: "Bluetooth Robot Car",
-      price: "PKR 9,500",
-      image: robotCar,
-      category: "Kits",
-      badge: "Popular",
-      rating: 4.8,
-      reviews: 56,
-      description:
-        "Smartphone-controlled robot car with Bluetooth connectivity.",
-      features: ["HC-05 Bluetooth", "Android App", "4WD Drive", "Speed Control", "Custom Chassis", "Battery Included"],
-    },
-    {
-      id: 6,
-      name: "Sensor Bundle Pack",
-      price: "PKR 4,500",
-      image: chassisDesign,
-      category: "Components",
-      rating: 4.5,
-      reviews: 23,
-      description:
-        "Essential sensor collection for robotics and automation projects.",
-      features: ["Ultrasonic Sensor", "IR Sensors x5", "Temperature Sensor", "Light Sensor", "PIR Motion Sensor", "Sound Sensor"],
-    },
-  ];
+  const [activeCategory, setActiveCategory] = useState("all");
 
-  const categories = ["All", "Kits", "Components", "Accessories"];
+  const filteredProducts = activeCategory === "all" 
+    ? products 
+    : products.filter(p => p.category === activeCategory);
 
   return (
     <div className="relative">
@@ -104,23 +28,20 @@ const Products = () => {
 
           {/* Categories */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {categories.map((category) => (
+            {productCategories.map((category) => (
               <Button
-                key={category}
-                variant={category === "All" ? "default" : "outline"}
+                key={category.id}
+                variant={activeCategory === category.id ? "default" : "outline"}
+                onClick={() => setActiveCategory(category.id)}
                 className={`font-medium ${
-                  category === "All"
+                  activeCategory === category.id
                     ? "bg-primary text-primary-foreground"
                     : "border-border text-muted-foreground hover:text-primary hover:border-primary"
                 }`}
               >
-                {category}
+                {category.name}
               </Button>
             ))}
-            <Button variant="outline" className="border-border text-muted-foreground">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
           </div>
         </div>
       </section>
@@ -129,95 +50,16 @@ const Products = () => {
       <section className="py-16 mechanical-pattern">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="card-industrial overflow-hidden group"
-              >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-                  
-                  {product.badge && (
-                    <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground font-semibold">
-                      {product.badge}
-                    </Badge>
-                  )}
-                  
-                  <Badge
-                    variant="outline"
-                    className="absolute top-4 right-4 bg-background/80 border-border"
-                  >
-                    {product.category}
-                  </Badge>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  {/* Rating */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-accent fill-accent" />
-                      <span className="ml-1 text-sm font-medium">{product.rating}</span>
-                    </div>
-                    <span className="text-muted-foreground text-sm">
-                      ({product.reviews} reviews)
-                    </span>
-                  </div>
-
-                  <h3 className="font-orbitron font-semibold text-lg mb-2">
-                    {product.name}
-                  </h3>
-                  
-                  <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  {/* Features preview */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {product.features.slice(0, 3).map((feature, index) => (
-                      <span
-                        key={index}
-                        className="text-xs bg-secondary px-2 py-1 rounded text-muted-foreground"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                    {product.features.length > 3 && (
-                      <span className="text-xs bg-secondary px-2 py-1 rounded text-primary">
-                        +{product.features.length - 3} more
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Price and Action */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <div>
-                      <span className="font-orbitron text-xl text-accent font-bold">
-                        {product.price}
-                      </span>
-                      {product.originalPrice && (
-                        <span className="text-muted-foreground text-sm line-through ml-2">
-                          {product.originalPrice}
-                        </span>
-                      )}
-                    </div>
-                    <Link to="/contact">
-                      <Button size="sm" className="btn-primary-glow">
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        Order
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
+
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground">No products found in this category.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -243,5 +85,95 @@ const Products = () => {
     </div>
   );
 };
+
+// Product Card Component
+const ProductCard = ({ product }: { product: Product }) => (
+  <div className="card-industrial overflow-hidden group">
+    {/* Image */}
+    <div className="relative h-64 overflow-hidden">
+      <img
+        src={product.image}
+        alt={product.name}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+      
+      {product.badge && (
+        <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground font-semibold">
+          {product.badge}
+        </Badge>
+      )}
+      
+      <Badge
+        variant="outline"
+        className="absolute top-4 right-4 bg-background/80 border-border capitalize"
+      >
+        {product.category}
+      </Badge>
+
+      {!product.inStock && (
+        <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+          <span className="font-orbitron text-lg text-muted-foreground">Out of Stock</span>
+        </div>
+      )}
+    </div>
+
+    {/* Content */}
+    <div className="p-6">
+      {/* Rating */}
+      <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center">
+          <Star className="w-4 h-4 text-accent fill-accent" />
+          <span className="ml-1 text-sm font-medium">{product.rating}</span>
+        </div>
+      </div>
+
+      <h3 className="font-orbitron font-semibold text-lg mb-2">
+        {product.name}
+      </h3>
+      
+      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+        {product.description}
+      </p>
+
+      {/* Features preview */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {product.features.slice(0, 3).map((feature, index) => (
+          <span
+            key={index}
+            className="text-xs bg-secondary px-2 py-1 rounded text-muted-foreground"
+          >
+            {feature}
+          </span>
+        ))}
+        {product.features.length > 3 && (
+          <span className="text-xs bg-secondary px-2 py-1 rounded text-primary">
+            +{product.features.length - 3} more
+          </span>
+        )}
+      </div>
+
+      {/* Price and Action */}
+      <div className="flex items-center justify-between pt-4 border-t border-border">
+        <div>
+          <span className="font-orbitron text-xl text-accent font-bold">
+            {formatPrice(product.price)}
+          </span>
+          {product.originalPrice && (
+            <span className="text-muted-foreground text-sm line-through ml-2">
+              {formatPrice(product.originalPrice)}
+            </span>
+          )}
+        </div>
+        <Link to="/contact">
+          <Button size="sm" className="btn-primary-glow" disabled={!product.inStock}>
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Order
+          </Button>
+        </Link>
+      </div>
+    </div>
+  </div>
+);
 
 export default Products;
